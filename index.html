@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Titkosügynök Születésnapi Meghívó</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
-
   body {
     font-family: 'Special Elite', monospace;
     background-color: #0f0f0f;
@@ -15,7 +14,6 @@
     padding: 2rem;
     overflow: hidden;
   }
-
   header {
     font-size: 2.5rem;
     letter-spacing: 0.1em;
@@ -23,57 +21,123 @@
     margin-bottom: 1.5rem;
     text-transform: uppercase;
   }
-
-  .effect {
-    color: #00ff00;
+  .effect p {
     text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 20px #00ff00;
-  }
-
-  #info {
+    margin: 0.5rem 0;
     font-size: 1.2rem;
-    margin-top: 4rem;
   }
-
+  a {
+    color: #00ff00;
+    text-decoration: underline;
+  }
+  a:hover {
+    color: #80ff80;
+  }
   #countdown {
     font-family: 'Digital-7', monospace;
     font-size: 3rem;
-    margin-top: 1rem;
+    margin-top: 3rem;
     color: #ff0000;
     text-shadow: 0 0 10px #ff0000;
+    display: none;
   }
-
   @font-face {
     font-family: 'Digital-7';
     src: url('https://cdn.jsdelivr.net/gh/keshikan/Digital-7/Digital-7.woff') format('woff');
+  }
+  /* Blinking cursor */
+  .typing::after {
+    content: '|';
+    animation: blink 1s steps(2, start) infinite;
+    color: #00ff00;
+    margin-left: 2px;
+  }
+  @keyframes blink {
+    0%, 50% {
+      opacity: 1;
+    }
+    50.01%, 100% {
+      opacity: 0;
+    }
   }
 </style>
 </head>
 <body>
 <header>Üdvözlet, Ügynök!</header>
+
 <section class="effect">
-  <p>Küldetésed, ha elvállalod:</p>
-  <p>Csatlakozz hozzánk egy titkos születésnapi küldetésre.</p>
+  <p id="text" class="typing"></p>
 </section>
-<section id="info">
-  Ez az információ túl fontos ahhoz, hogy illetéktelen kezébe kerüljön.<br>
-  Emiatt az üzenet 10 mp múlva megsemmisíti önnmagát.
-</section>
+
 <section id="countdown">10</section>
 
 <script>
-  let timeLeft = 10;
+  const textContent = 
+    `Küldetésed, ha elvállalod:\n` +
+    `Csatlakozz hozzánk egy titkos születésnapi küldetésre.\n` +
+    `Célszemély: Benedek\n` +
+    `Bevetés helye: Halomegyházi utca 24/a\n` +
+    `Zéró idő: 13:00`;
+  
+  const mapUrl = "https://maps.app.goo.gl/HkYaQr12ntiGR9rr7";
+  
+  const textElem = document.getElementById('text');
   const countdown = document.getElementById('countdown');
 
-  const timerId = setInterval(() => {
-    timeLeft -= 1;
-    countdown.textContent = timeLeft;
+  const fullTextLines = textContent.split('\n');
+  let currentLine = 0;
+  let displayedText = '';
 
-    if(timeLeft === 0) {
-      clearInterval(timerId);
-      document.body.innerHTML = '<h1>Üzenet megsemmisítve.</h1>';
-      setTimeout(() => window.close(), 2000);
+  // Function to type a single line with clickable link for "Bevetés helye"
+  function typeLine(line, callback) {
+    let i = 0;
+    const typingSpeed = 80; // ms
+    
+    function typeChar() {
+      if(i < line.length) {
+        displayedText += line.charAt(i);
+        textElem.innerHTML = displayedText.replace('Halomegyházi utca 24/a', `<a href="${mapUrl}" target="_blank" rel="noopener noreferrer">Halomegyházi utca 24/a</a>`);
+        i++;
+        setTimeout(typeChar, typingSpeed);
+      } else {
+        displayedText += '<br>';
+        callback();
+      }
     }
-  }, 1000);
+    typeChar();
+  }
+
+  function typeNextLine() {
+    if(currentLine < fullTextLines.length) {
+      typeLine(fullTextLines[currentLine], () => {
+        currentLine++;
+        typeNextLine();
+      });
+    } else {
+      // Szöveg kész, cursor eltűnik
+      textElem.classList.remove('typing');
+      // Countdown megjelenítése és indítása
+      countdown.style.display = 'block';
+      startCountdown(10);
+    }
+  }
+
+  function startCountdown(seconds) {
+    let timeLeft = seconds;
+    countdown.textContent = timeLeft;
+    const timerId = setInterval(() => {
+      timeLeft -= 1;
+      countdown.textContent = timeLeft;
+
+      if(timeLeft <= 0) {
+        clearInterval(timerId);
+        document.body.innerHTML = '<h1>Üzenet megsemmisítve.</h1>';
+        setTimeout(() => window.close(), 2000);
+      }
+    }, 1000);
+  }
+
+  typeNextLine();
 </script>
 </body>
 </html>
