@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Titkosügynök Születésnapi Meghívó</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+
+  body {
+    font-family: 'Special Elite', monospace;
+    background-color: #0f0f0f;
+    color: #00ff00;
+    text-align: center;
+    padding: 2rem;
+    overflow: hidden;
+  }
+
+  header {
+    font-size: 2.5rem;
+    letter-spacing: 0.1em;
+    border-bottom: 2px solid #00ff00;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+  }
+
+  .effect {
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 20px #00ff00;
+  }
+
+  #info {
+    font-size: 1.2rem;
+    margin-top: 4rem;
+  }
+
+  #countdown {
+    font-family: 'Digital-7', monospace;
+    font-size: 3rem;
+    margin-top: 1rem;
+    color: #ff0000;
+    text-shadow: 0 0 10px #ff0000;
+  }
+
+  @font-face {
+    font-family: 'Digital-7';
+    src: url('https://cdn.jsdelivr.net/gh/keshikan/Digital-7/Digital-7.woff') format('woff');
+  }
+</style>
+</head>
+<body>
+<header>Üdvözlet, Ügynök!</header>
+<section class="effect">
+  <p>Küldetésed, ha elvállalod:</p>
+  <p>Csatlakozz hozzánk egy titkos születésnapi küldetésre.</p>
+</section>
+<section id="info">
+  Ez az információ túl fontos ahhoz, hogy illetéktelen kezébe kerüljön.<br>
+  Emiatt az üzenet 10 mp múlva megsemmisíti önnmagát.
+</section>
+<section id="countdown">10</section>
+
+<script>
+  let timeLeft = 10;
+  const countdown = document.getElementById('countdown');
+
+  const timerId = setInterval(() => {
+    timeLeft -= 1;
+    countdown.textContent = timeLeft;
+
+    if(timeLeft === 0) {
+      clearInterval(timerId);
+      document.body.innerHTML = '<h1>Üzenet megsemmisítve.</h1>';
+      setTimeout(() => window.close(), 2000);
+    }
+  }, 1000);
+</script>
+</body>
+</html>
