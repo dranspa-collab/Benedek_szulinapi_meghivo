@@ -81,7 +81,8 @@
     `Kapcsolattartó parancsnok: Miklós ügynök\n` +    
     `Telefon: +36 20 239 5796\n\n` +
     `Ez az információ túl fontos ahhoz, hogy illetéktelen kezébe kerüljön.\n` +
-    `Emiatt az üzenet 10 mp múlva megsemmisíti önnmagát.\n\n`;
+    `Emiatt az üzenet 10 mp múlva megsemmisíti önnmagát.\n` +
+    `Nyomj rá a képernyőre ha elolvastad.\n`;
   
   const mapUrl = "https://maps.app.goo.gl/HkYaQr12ntiGR9rr7";
   
@@ -126,20 +127,29 @@
     }
   }
 
-  function startCountdown(seconds) {
-    let timeLeft = seconds;
-    countdown.textContent = timeLeft;
-    const timerId = setInterval(() => {
-      timeLeft -= 1;
-      countdown.textContent = timeLeft;
+let countdownPaused = false;
 
-      if(timeLeft <= 0) {
+document.body.addEventListener('click', () => {
+  countdownPaused = !countdownPaused;
+});
+
+function startCountdown(seconds) {
+  let timeLeft = seconds;
+  countdown.textContent = timeLeft;
+
+  const timerId = setInterval(() => {
+    if (!countdownPaused) {  // A számláló csak akkor csökken, ha nincs pauza
+      timeLeft--;
+      countdown.textContent = timeLeft;
+      if (timeLeft <= 0) {
         clearInterval(timerId);
         document.body.innerHTML = '<h1>Üzenet megsemmisítve.</h1>';
         setTimeout(() => window.close(), 2000);
       }
-    }, 1000);
-  }
+    }
+  }, 1000);
+}
+
 
   typeNextLine();
 </script>
